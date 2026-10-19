@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  medops-sentinel:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: medops-sentinel:v1.0
+    container_name: medops-sentinel-sre
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - MEDOPS_ENV=production
+      - LOG_LEVEL=info
+      - CIRCUIT_BREAKER_PSI_THRESHOLD=0.25
+      - LATENCY_SLA_MS=10.0
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 1024M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "5"

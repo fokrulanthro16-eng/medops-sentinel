@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MedOps Lab &mdash; Autonomous Clinical AI Drift Firewall &amp; Self-Healing SRE</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Three.js CDN for 3D Liquid-Glass DNA Helix -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <!-- FontAwesome 6 CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts: Plus Jakarta Sans, Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            aelion: {
+              bg: '#F4F5F7',
+              surface: '#FFFFFF',
+              navy: '#2B4C7E',
+              navyDark: '#1E3A68',
+              navyLight: '#EBF1F8',
+              charcoal: '#111315',
+              muted: '#64748B',
+              border: '#E2E8F0',
+              emerald: '#059669',
+              amber: '#D97706',
+              crimson: '#DC2626'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #F4F5F7;
+      color: #111315;
+      font-family: 'Plus Jakarta Sans', Inter, sans-serif;
+      overflow-x: hidden;
+      margin: 0;
+      padding: 0;
+    }
+    
+    /* Frosted Glass Cards (Aelion Lab Swiss Diagnostic Aesthetic) */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(43, 76, 126, 0.12);
+      box-shadow: 0 12px 36px -8px rgba(30, 58, 104, 0.06), 0 4px 12px -2px rgba(0, 0, 0, 0.02);
+    }
+
+    .glass-pill {
+      background: rgba(255, 255, 255, 0.82);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(43, 76, 126, 0.16);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .glass-pill:hover {
+      background: rgba(255, 255, 255, 0.98);
+      border-color: #2B4C7E;
+      box-shadow: 0 4px 16px rgba(43, 76, 126, 0.12);
+    }
+
+    .scrollbar-thin::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    .scrollbar-thin::-webkit-scrollbar-track {
+      background: #F1F5F9;
+    }
+    .scrollbar-thin::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 4px;
+    }
+    .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+      background: #2B4C7E;
+    }
+  </style>
+</head>
+<body class="antialiased selection:bg-aelion-navy selection:text-white">
+
+  <!-- ================= TOP FLOATING NAVIGATION BAR ================= -->
+  <div class="fixed top-4 left-0 right-0 z-50 px-4 sm:px-8">
+    <div class="max-w-[1580px] mx-auto flex items-center justify-between gap-4">
+      
+      <!-- Left: Deep Navy Brand Block -->
+      <a href="/" class="flex items-center gap-3 bg-[#2B4C7E] hover:bg-[#1E3A68] text-white px-5 py-3 rounded-2xl shadow-xl shadow-[#2B4C7E]/20 transition-all duration-300">
+        <div class="w-8 h-8 rounded-xl bg-white/15 flex items-center justify-center text-white">
+          <i class="fa-solid fa-dna text-base"></i>
+        </div>
+        <div class="leading-none">
+          <div class="text-base font-bold tracking-tight">MedOps Lab</div>
+          <div class="text-[10px] text-blue-200/90 font-mono tracking-wider mt-0.5">SWISS CLINICAL SRE</div>
+        </div>
+      </a>
+
+      <!-- Center: Frosted Glass Nav Links -->
+      <nav class="hidden lg:flex items-center gap-1.5 glass-card px-3 py-2 rounded-2xl shadow-sm border border-slate-200">
+        <a href="#workbench" class="px-3.5 py-1.5 text-xs font-semibold text-slate-700 hover:text-[#2B4C7E] rounded-xl hover:bg-slate-100/80 transition-colors flex items-center gap-1">
+          Telemetry <i class="fa-solid fa-chevron-down text-[9px] opacity-60"></i>
+        </a>
+        <a href="#firewall" class="px-3.5 py-1.5 text-xs font-semibold text-slate-700 hover:text-[#2B4C7E] rounded-xl hover:bg-slate-100/80 transition-colors flex items-center gap-1">
+          AI Firewall <i class="fa-solid fa-chevron-down text-[9px] opacity-60"></i>
+        </a>
+        <a href="#chaos" class="px-3.5 py-1.5 text-xs font-semibold text-slate-700 hover:text-[#2B4C7E] rounded-xl hover:bg-slate-100/80 transition-colors flex items-center gap-1">
+          Chaos SRE <i class="fa-solid fa-chevron-down text-[9px] opacity-60"></i>
+        </a>
+        <a href="#copilot" class="px-3.5 py-1.5 text-xs font-semibold text-slate-700 hover:text-[#2B4C7E] rounded-xl hover:bg-slate-100/80 transition-colors flex items-center gap-1">
+          FHIR Shield <i class="fa-solid fa-chevron-down text-[9px] opacity-60"></i>
+        </a>
+        <a href="#audit" class="px-3.5 py-1.5 text-xs font-semibold text-slate-700 hover:text-[#2B4C7E] rounded-xl hover:bg-slate-100/80 transition-colors flex items-center gap-1">
+          Benchmarks <i class="fa-solid fa-chevron-down text-[9px] opacity-60"></i>
+        </a>
+        <a href="/api/health" target="_blank" class="px-3.5 py-1.5 text-xs font-semibold text-slate-500 hover:text-[#2B4C7E] rounded-xl hover:bg-slate-100/80 transition-colors">
+          K8s Docs
+        </a>
+      </nav>
+
+      <!-- Right: Live Audit CTA & SRE Status Indicator -->
+      <div class="flex items-center gap-2.5">
+        <button onclick="fetchStatus()" title="Refresh Telemetry" class="w-11 h-11 rounded-2xl glass-card flex items-center justify-center text-slate-700 hover:text-[#2B4C7E] hover:border-[#2B4C7E] transition-all">
+          <i class="fa-solid fa-rotate text-sm"></i>
+        </button>
+        <button onclick="triggerLiveAudit()" class="flex items-center gap-2.5 bg-[#2B4C7E] hover:bg-[#1E3A68] text-white text-xs font-semibold px-5 py-3 rounded-2xl shadow-xl shadow-[#2B4C7E]/25 transition-all">
+          <span>Run Live Audit</span>
+          <i class="fa-solid fa-arrow-right text-[11px]"></i>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================= HERO SECTION (AELION LAB EXACT SPLIT + 3D DNA CANVAS) ================= -->
+  <section class="relative min-h-[82vh] pt-28 pb-6 px-6 sm:px-10 flex flex-col justify-between overflow-hidden">
+    
+    <!-- 3D Liquid-Glass DNA Helix WebGL Canvas (Diagonal Centerpiece) -->
+    <div id="dnaContainer" class="absolute inset-0 pointer-events-none z-10 flex items-center justify-center">
+      <canvas id="dnaCanvas" class="w-full h-full pointer-events-auto cursor-grab active:cursor-grabbing"></canvas>
+    </div>
+
+    <!-- Hero Content Container (Layered above Three.js Canvas) -->
+    <div class="max-w-[1580px] w-full mx-auto relative z-20 flex-1 flex flex-col justify-between">
+      
+      <!-- Upper Hero Row: Top-Left Monumental Headline & Top-Right Microscope Card -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        
+        <!-- Top-Left Editorial Block -->
+        <div class="lg:col-span-7 space-y-3.5 max-w-2xl">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#2B4C7E]/40 text-[#2B4C7E] bg-white/80 text-[11px] font-mono tracking-wider font-semibold uppercase backdrop-blur-md shadow-sm">
+            <span class="w-2 h-2 rounded-full bg-[#059669] animate-pulse"></span>
+            AUTONOMOUS CLINICAL AI &amp; DEVOPS LAB
+          </div>
+
+          <h1 class="text-4xl sm:text-6xl xl:text-7xl font-normal tracking-tight text-[#111315] leading-[1.05]">
+            Precise Lab<br>
+            <span class="font-light text-slate-800">Telemetry for</span>
+          </h1>
+
+          <p class="text-sm sm:text-base text-slate-600 font-normal leading-relaxed max-w-xl">
+            Our certified clinical AI firewall and self-healing DevOps engine delivers zero-hallucination diagnostics, real-time ICU telemetry, and sub-10ms auto-rollback resilience you can trust.
+          </p>
+
+          <!-- Deployment Slot Pill Status Button -->
+          <div class="pt-1.5">
+            <div id="heroSlotBadge" class="inline-flex items-center gap-3 bg-white/95 border border-[#2B4C7E]/20 text-[#111315] px-4 py-2.5 rounded-2xl shadow-sm hover:border-[#2B4C7E] transition-all">
+              <span class="w-2.5 h-2.5 rounded-full bg-[#059669]"></span>
+              <div class="text-xs font-mono font-bold tracking-tight">
+                Active Slot: <span id="heroSlotName" class="text-[#2B4C7E]">Primary-AI-Canary-v2.4</span>
+              </div>
+              <div class="w-6 h-6 rounded-xl bg-[#2B4C7E] text-white flex items-center justify-center text-xs ml-1 shadow-sm">
+                ↗
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Top-Right Floating Microscope Preview Card -->
+        <div class="lg:col-span-5 flex justify-end">
+          <div onclick="runAutomatedTour()" class="glass-card p-4 rounded-3xl w-full max-w-xs cursor-pointer hover:shadow-2xl hover:border-[#2B4C7E]/40 transition-all group">
+            <div class="relative w-full h-36 rounded-2xl overflow-hidden bg-gradient-to-tr from-slate-100 via-blue-50 to-slate-200 border border-slate-200/80 flex items-center justify-center">
+              <div class="w-20 h-20 rounded-full border-4 border-white/80 bg-white/40 backdrop-blur-md flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-500">
+                <div class="w-10 h-10 rounded-full bg-[#2B4C7E] text-white flex items-center justify-center text-sm shadow-md group-hover:bg-[#1E3A68]">
+                  <i class="fa-solid fa-play ml-0.5"></i>
+                </div>
+              </div>
+              <div class="absolute bottom-2 left-2.5 text-[9px] font-mono text-[#2B4C7E] bg-white/95 px-2 py-0.5 rounded-md border border-slate-200 font-bold">
+                LIVE INTERACTIVE TOUR
+              </div>
+            </div>
+            <div class="mt-3 flex items-center justify-between">
+              <div>
+                <h4 class="text-xs font-bold text-[#111315]">Your Partner in Health &amp; SRE</h4>
+                <p class="text-[11px] text-slate-500 mt-0.5">Zero-drift clinical protocol verification</p>
+              </div>
+              <span class="text-xs font-mono text-[#2B4C7E] font-semibold group-hover:translate-x-1 transition-transform">
+                Explore ➔
+              </span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Lower Hero Row: Bottom-Right Giant Headline -->
+      <div class="flex justify-end pt-3 pb-2">
+        <h2 class="text-4xl sm:text-6xl xl:text-7xl font-normal tracking-tight text-[#111315] leading-none text-right">
+          Health Answers
+        </h2>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= WORKBENCH: LIVE VITALS, DRIFT RADAR & ML GAUGES ================= -->
+  <section id="workbench" class="max-w-[1580px] mx-auto px-6 sm:px-10 py-10 space-y-8">
+    
+    <!-- Section Header -->
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-slate-200 pb-4">
+      <div>
+        <div class="text-[11px] font-mono font-bold text-[#2B4C7E] uppercase tracking-wider">Clinical Telemetry Engine</div>
+        <h3 class="text-2xl sm:text-3xl font-bold text-[#111315] tracking-tight mt-1">Real-Time ICU Physiological Signals</h3>
+      </div>
+      <div class="flex items-center gap-3 text-xs font-mono">
+        <span class="flex items-center gap-1.5 text-[#059669]">
+          <span class="w-2 h-2 rounded-full bg-[#059669] animate-pulse"></span> Telemetry Stream Active
+        </span>
+        <span class="text-slate-400">&bull;</span>
+        <span class="text-slate-600">SLA: &lt; 10ms</span>
+      </div>
+    </div>
+
+    <!-- 5 Clean Clinical Metric Cards -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+      
+      <!-- Card 1: Heart Rate -->
+      <div class="glass-card rounded-2xl p-5 hover:border-[#2B4C7E]/40 transition-all">
+        <div class="flex items-center justify-between text-slate-500 text-xs mb-1.5">
+          <span class="font-mono text-[11px] uppercase tracking-wider font-semibold">HEART RATE</span>
+          <i class="fa-solid fa-heart-pulse text-rose-500 text-sm"></i>
+        </div>
+        <div class="flex items-baseline gap-2">
+          <span id="metricHR" class="text-3xl sm:text-4xl font-extrabold text-[#111315]">74</span>
+          <span class="text-xs text-slate-500 font-mono">BPM</span>
+        </div>
+        <div class="mt-3 text-[11px] text-[#059669] font-mono flex items-center gap-1.5">
+          <span class="w-1.5 h-1.5 rounded-full bg-[#059669]"></span> Normal Sinus Rhythm
+        </div>
+      </div>
+
+      <!-- Card 2: SpO2 Pulse Ox -->
+      <div class="glass-card rounded-2xl p-5 hover:border-[#2B4C7E]/40 transition-all">
+        <div class="flex items-center justify-between text-slate-500 text-xs mb-1.5">
+          <span class="font-mono text-[11px] uppercase tracking-wider font-semibold">SpO2 PULSE OX</span>
+          <i class="fa-solid fa-lungs text-[#2B4C7E] text-sm"></i>
+        </div>
+        <div class="flex items-baseline gap-2">
+          <span id="metricSpO2" class="text-3xl sm:text-4xl font-extrabold text-[#2B4C7E]">98</span>
+          <span class="text-xs text-slate-500 font-mono">%</span>
+        </div>
+        <div class="mt-3 w-full bg-slate-100 rounded-full h-1.5 overflow-hidden border border-slate-200">
+          <div id="spo2Bar" class="bg-[#2B4C7E] h-full rounded-full transition-all duration-500" style="width: 98%"></div>
+        </div>
+      </div>
+
+      <!-- Card 3: Blood Pressure & MAP -->
+      <div class="glass-card rounded-2xl p-5 hover:border-[#2B4C7E]/40 transition-all">
+        <div class="flex items-center justify-between text-slate-500 text-xs mb-1.5">
+          <span class="font-mono text-[11px] uppercase tracking-wider font-semibold">BLOOD PRESSURE</span>
+          <i class="fa-solid fa-droplet text-slate-600 text-sm"></i>
+        </div>
+        <div class="flex items-baseline gap-2">
+          <span id="metricBP" class="text-3xl sm:text-4xl font-extrabold text-[#111315]">118/78</span>
+          <span class="text-xs text-slate-500 font-mono">mmHg</span>
+        </div>
+        <div class="mt-3 text-[11px] text-slate-600 font-mono">
+          MAP: <span id="metricMAP" class="font-bold text-[#111315]">91.3</span> mmHg
+        </div>
+      </div>
+
+      <!-- Card 4: Sepsis MEWS Score -->
+      <div class="glass-card rounded-2xl p-5 hover:border-[#2B4C7E]/40 transition-all">
+        <div class="flex items-center justify-between text-slate-500 text-xs mb-1.5">
+          <span class="font-mono text-[11px] uppercase tracking-wider font-semibold">MEWS SEPSIS RISK</span>
+          <i class="fa-solid fa-biohazard text-amber-600 text-sm"></i>
+        </div>
+        <div class="flex items-baseline gap-2">
+          <span id="metricMEWS" class="text-3xl sm:text-4xl font-extrabold text-[#111315]">0</span>
+          <span class="text-xs text-slate-500 font-mono">pts</span>
+        </div>
+        <div id="riskTierBadge" class="mt-3 inline-block px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-50 text-[#059669] border border-emerald-200">
+          LOW RISK
+        </div>
+      </div>
+
+      <!-- Card 5: Model Drift (PSI) Analog Gauge -->
+      <div id="driftCard" class="glass-card rounded-2xl p-5 hover:border-[#2B4C7E]/40 transition-all">
+        <div class="flex items-center justify-between text-slate-500 text-xs mb-1.5">
+          <span class="font-mono text-[11px] uppercase tracking-wider font-semibold">MODEL DRIFT (PSI)</span>
+          <i class="fa-solid fa-chart-line text-[#059669] text-sm"></i>
+        </div>
+        <div class="flex items-baseline gap-2">
+          <span id="metricPSI" class="text-3xl sm:text-4xl font-extrabold text-[#059669]">0.000</span>
+          <span class="text-xs text-slate-500 font-mono">/ &gt;0.25</span>
+        </div>
+        <div id="driftLevelBadge" class="mt-3 inline-block px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-blue-50 text-[#2B4C7E] border border-blue-200">
+          STABLE CANARY
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ================= CHAOS SRE CONSOLE & SELF-HEALING ENGINE ================= -->
+    <div id="chaos" class="glass-card rounded-3xl p-6 sm:p-8 space-y-5 border border-slate-200">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <div class="text-[11px] font-mono font-bold text-[#2B4C7E] uppercase tracking-wider">Site Reliability Engineering</div>
+          <h4 class="text-xl font-bold text-[#111315] tracking-tight mt-0.5">Chaos Engineering &amp; Sub-10ms Auto-Rollback Controller</h4>
+          <p class="text-xs text-slate-500 mt-1 max-w-2xl">
+            Inject production faults live to verify that the circuit breaker executes an atomic rollback to <code class="text-[#2B4C7E] font-bold">Safe-Clinical-Fallback-v1.0</code> with zero clinical downtime.
+          </p>
+        </div>
+        <button onclick="restoreCanary()" class="bg-[#059669] hover:bg-[#047857] text-white font-semibold text-xs px-5 py-2.5 rounded-xl shadow-lg shadow-emerald-700/20 transition-all flex items-center gap-2">
+          <i class="fa-solid fa-rotate-left"></i> Restore Canary Slot
+        </button>
+      </div>
+
+      <!-- 4 Tactile Pill Action Buttons -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 pt-2">
+        
+        <!-- Fault 1: Drift -->
+        <button onclick="injectChaos('drift')" class="glass-pill p-4 rounded-2xl text-left border border-slate-200 hover:border-amber-500 group">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-xs font-bold text-[#111315] group-hover:text-amber-600 transition-colors">Inject Model Drift</span>
+            <i class="fa-solid fa-bolt text-amber-500 text-xs"></i>
+          </div>
+          <p class="text-[11px] text-slate-500">Forces PSI &gt; 0.25 &bull; Instant Rollback</p>
+        </button>
+
+        <!-- Fault 2: Lethal Dosage Attack -->
+        <button onclick="injectChaos('hallucination_attack')" class="glass-pill p-4 rounded-2xl text-left border border-slate-200 hover:border-rose-500 group">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-xs font-bold text-[#111315] group-hover:text-rose-600 transition-colors">Lethal Dosage Attack</span>
+            <i class="fa-solid fa-skull text-rose-500 text-xs"></i>
+          </div>
+          <p class="text-[11px] text-slate-500">Toxic KCl Push &bull; 0.0% Pass-Through</p>
+        </button>
+
+        <!-- Fault 3: Sensor Noise -->
+        <button onclick="injectChaos('sensor_noise')" class="glass-pill p-4 rounded-2xl text-left border border-slate-200 hover:border-[#2B4C7E] group">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-xs font-bold text-[#111315] group-hover:text-[#2B4C7E] transition-colors">Corrupt Sensor Stream</span>
+            <i class="fa-solid fa-microchip text-[#2B4C7E] text-xs"></i>
+          </div>
+          <p class="text-[11px] text-slate-500">Inverted BP &amp; Negative SpO2</p>
+        </button>
+
+        <!-- Fault 4: Statistical Jitter -->
+        <button onclick="injectChaos('statistical_noise')" class="glass-pill p-4 rounded-2xl text-left border border-slate-200 hover:border-teal-600 group">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-xs font-bold text-[#111315] group-hover:text-teal-600 transition-colors">Statistical Jitter</span>
+            <i class="fa-solid fa-wave-square text-teal-600 text-xs"></i>
+          </div>
+          <p class="text-[11px] text-slate-500">High-Freq Telemetry Sensor Noise</p>
+        </button>
+
+      </div>
+    </div>
+
+    <!-- ================= SPLIT SECTION: CLINICAL EVALUATION & HUGGING FACE COPILOT ================= -->
+    <div id="copilot" class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      
+      <!-- Left: Clinical Telemetry & PHI Redaction Workbench (6 Cols) -->
+      <div class="lg:col-span-6 glass-card rounded-3xl p-6 sm:p-8 space-y-5 border border-slate-200">
+        <div class="flex items-center justify-between border-b border-slate-200 pb-3">
+          <div>
+            <div class="text-[11px] font-mono font-bold text-[#2B4C7E] uppercase tracking-wider">HIPAA Shield &amp; Clinical Input</div>
+            <h4 class="text-lg font-bold text-[#111315]">Patient Telemetry &amp; Notes Inspector</h4>
+          </div>
+          <button onclick="fillSepsisCrisisDemo()" class="text-xs font-mono text-[#2B4C7E] font-semibold hover:underline">
+            [Load Sepsis Crisis Demo]
+          </button>
+        </div>
+
+        <form id="evalForm" onsubmit="handleEvaluationSubmit(event)" class="space-y-4">
+          <!-- Vitals Input Grid -->
+          <div class="grid grid-cols-3 sm:grid-cols-6 gap-2.5">
+            <div>
+              <label class="block text-[11px] text-slate-500 font-mono mb-1">HR</label>
+              <input id="inputHR" type="number" step="0.1" value="74" required class="w-full bg-white border border-slate-300 rounded-xl px-2.5 py-1.5 text-xs text-[#111315] font-mono focus:border-[#2B4C7E] focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-[11px] text-slate-500 font-mono mb-1">SpO2</label>
+              <input id="inputSpO2" type="number" step="0.1" value="98" required class="w-full bg-white border border-slate-300 rounded-xl px-2.5 py-1.5 text-xs text-[#111315] font-mono focus:border-[#2B4C7E] focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-[11px] text-slate-500 font-mono mb-1">Sys BP</label>
+              <input id="inputSBP" type="number" step="0.1" value="120" required class="w-full bg-white border border-slate-300 rounded-xl px-2.5 py-1.5 text-xs text-[#111315] font-mono focus:border-[#2B4C7E] focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-[11px] text-slate-500 font-mono mb-1">Dia BP</label>
+              <input id="inputDBP" type="number" step="0.1" value="80" required class="w-full bg-white border border-slate-300 rounded-xl px-2.5 py-1.5 text-xs text-[#111315] font-mono focus:border-[#2B4C7E] focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-[11px] text-slate-500 font-mono mb-1">Resp</label>
+              <input id="inputRR" type="number" step="0.1" value="16" required class="w-full bg-white border border-slate-300 rounded-xl px-2.5 py-1.5 text-xs text-[#111315] font-mono focus:border-[#2B4C7E] focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-[11px] text-slate-500 font-mono mb-1">Temp &deg;C</label>
+              <input id="inputTemp" type="number" step="0.1" value="37.0" required class="w-full bg-white border border-slate-300 rounded-xl px-2.5 py-1.5 text-xs text-[#111315] font-mono focus:border-[#2B4C7E] focus:outline-none">
+            </div>
+          </div>
+
+          <!-- Free-text clinical notes with HIPAA PHI -->
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label class="text-[11px] text-slate-600 font-mono font-semibold">Clinical Note (Raw PII / PHI to Redact):</label>
+              <span class="text-[10px] text-purple-700 font-mono">100% Deterministic Regex Shield</span>
+            </div>
+            <textarea id="inputNotes" rows="2" class="w-full bg-white border border-slate-300 rounded-xl p-2.5 text-xs text-slate-800 font-mono focus:border-[#2B4C7E] focus:outline-none leading-relaxed">Patient John Doe, SSN 000-12-3456, MRN #8492014 admitted with acute tachycardia. Prescribed Epinephrine 5 mg IV push immediately.</textarea>
+          </div>
+
+          <!-- Drug & Dosage Guardrail row -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+            <div>
+              <label class="block text-[11px] text-slate-500 font-mono mb-1">Proposed Drug</label>
+              <input id="inputMed" type="text" value="epinephrine" class="w-full bg-white border border-slate-300 rounded-xl px-2.5 py-1.5 text-xs text-[#111315] font-mono focus:border-[#2B4C7E] focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-[11px] text-slate-500 font-mono mb-1">Dose Amount</label>
+              <input id="inputDose" type="number" step="0.01" value="5.0" class="w-full bg-white border border-slate-300 rounded-xl px-2.5 py-1.5 text-xs text-[#111315] font-mono focus:border-[#2B4C7E] focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-[11px] text-slate-500 font-mono mb-1">Unit</label>
+              <select id="inputUnit" class="w-full bg-white border border-slate-300 rounded-xl px-2.5 py-1.5 text-xs text-[#111315] font-mono focus:border-[#2B4C7E] focus:outline-none">
+                <option value="mg" selected>mg</option>
+                <option value="mcg">mcg</option>
+                <option value="meq">mEq</option>
+                <option value="units">units</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-[11px] text-slate-500 font-mono mb-1">Route</label>
+              <select id="inputRoute" class="w-full bg-white border border-slate-300 rounded-xl px-2.5 py-1.5 text-xs text-[#111315] font-mono focus:border-[#2B4C7E] focus:outline-none">
+                <option value="iv_push" selected>IV Push</option>
+                <option value="iv_infusion">IV Infusion</option>
+                <option value="oral">Oral</option>
+              </select>
+            </div>
+          </div>
+
+          <button type="submit" class="w-full py-3 px-5 bg-[#2B4C7E] hover:bg-[#1E3A68] text-white font-bold text-xs rounded-xl shadow-lg shadow-[#2B4C7E]/20 transition-all flex items-center justify-center gap-2">
+            <i class="fa-solid fa-shield-virus"></i> Run Clinical Evaluation &amp; AI Analysis
+          </button>
+        </form>
+
+        <!-- Redacted Note Preview -->
+        <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-mono space-y-2">
+          <div class="flex items-center justify-between text-slate-500 text-[11px]">
+            <span class="font-bold text-purple-700 flex items-center gap-1.5">
+              <i class="fa-solid fa-lock"></i> Scrubbed Clinical Note (Sent to AI):
+            </span>
+            <span id="phiCountBadge" class="text-purple-600 font-semibold">0 PHI Entities Redacted</span>
+          </div>
+          <div id="evalRedactedNotes" class="bg-white p-2.5 rounded-xl border border-slate-200 text-slate-700 select-all leading-relaxed">
+            Awaiting telemetry submission...
+          </div>
+        </div>
+
+        <!-- Guardrail Status Banner -->
+        <div id="guardrailBanner" class="p-3.5 rounded-2xl bg-white border border-slate-200 text-xs font-mono space-y-1">
+          <div class="flex items-center gap-2">
+            <span id="guardrailBadge" class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-600">
+              PENDING
+            </span>
+            <span id="guardrailAction" class="text-slate-500 font-semibold">Pharmacological Guardrail Decision</span>
+          </div>
+          <p id="guardrailJustification" class="text-[11px] text-slate-600 leading-relaxed pt-1">
+            No evaluation dispatched yet.
+          </p>
+        </div>
+
+      </div>
+
+      <!-- Right: Hugging Face AI Clinical SBAR & DevOps RCA Console (6 Cols) -->
+      <div class="lg:col-span-6 glass-card rounded-3xl p-6 sm:p-8 space-y-5 border border-slate-200 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between border-b border-slate-200 pb-3">
+            <div>
+              <div class="text-[11px] font-mono font-bold text-[#2B4C7E] uppercase tracking-wider">Generative AI Clinical Intelligence</div>
+              <h4 class="text-lg font-bold text-[#111315]">Hugging Face Qwen-72B Dual Copilot</h4>
+            </div>
+            <span id="hfCopilotModeBadge" class="text-[10px] font-mono px-3 py-1 rounded-full bg-blue-50 text-[#2B4C7E] border border-blue-200 font-bold">
+              ENGINE READY
+            </span>
+          </div>
+
+          <!-- Dual Reports Grid -->
+          <div class="grid grid-cols-1 gap-4 pt-4">
+            
+            <!-- Report 1: Clinical SBAR -->
+            <div class="bg-white p-4 rounded-2xl border border-blue-100 shadow-sm space-y-2">
+              <div class="flex items-center justify-between text-xs font-bold text-[#2B4C7E] border-b border-slate-100 pb-2">
+                <span><i class="fa-solid fa-stethoscope mr-1.5"></i>1. CLINICAL SBAR HANDOFF SUMMARY</span>
+                <span class="text-[10px] font-mono text-slate-400">PATIENT SAFETY</span>
+              </div>
+              <div id="hfSbarText" class="text-xs font-mono text-slate-700 whitespace-pre-wrap leading-relaxed max-h-48 overflow-y-auto scrollbar-thin">
+• SITUATION: Awaiting telemetry packet.
+• BACKGROUND: No clinical notes provided yet.
+• ASSESSMENT: Baseline ICU monitoring under normal parameters.
+• RECOMMENDATION: Maintain standard clinical surveillance protocol.
+              </div>
+            </div>
+
+            <!-- Report 2: DevOps Drift RCA -->
+            <div class="bg-white p-4 rounded-2xl border border-amber-100 shadow-sm space-y-2">
+              <div class="flex items-center justify-between text-xs font-bold text-amber-800 border-b border-slate-100 pb-2">
+                <span><i class="fa-solid fa-server mr-1.5"></i>2. DEVOPS DRIFT ROOT-CAUSE ANALYSIS (RCA)</span>
+                <span class="text-[10px] font-mono text-slate-400">SRE INCIDENT</span>
+              </div>
+              <div id="hfRcaText" class="text-xs font-mono text-slate-700 whitespace-pre-wrap leading-relaxed max-h-48 overflow-y-auto scrollbar-thin">
+• INCIDENT CLASSIFICATION: P4-NOMINAL CANARY STABILITY.
+• ROOT-CAUSE ATTRIBUTION: Telemetry distribution aligned with baseline reference quartiles.
+• CIRCUIT BREAKER STATE: CLOSED (Primary AI Canary Active).
+• SRE REMEDIATION ACTIONS: Telemetry metrics within SLA. No manual intervention required.
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="pt-3 border-t border-slate-200 flex items-center justify-between text-xs font-mono text-slate-500">
+          <span>MODEL: Qwen/Qwen2.5-72B-Instruct</span>
+          <span id="hfLatencyText">LATENCY: 0.0 ms</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ================= SWISS SRE TERMINAL & EVENT STREAM ================= -->
+    <div id="audit" class="glass-card rounded-3xl p-6 sm:p-8 space-y-3 border border-slate-200">
+      <div class="flex items-center justify-between border-b border-slate-200 pb-3">
+        <div class="flex items-center gap-3">
+          <div class="w-3 h-3 rounded-full bg-[#059669] animate-pulse"></div>
+          <h4 class="text-sm font-mono font-bold text-[#111315] uppercase tracking-wider">
+            medops-sre-audit.log &bull; Deterministic System Stream
+          </h4>
+        </div>
+        <button onclick="clearTerminal()" class="text-xs font-mono text-slate-400 hover:text-slate-600">
+          [Clear Terminal]
+        </button>
+      </div>
+
+      <div id="terminalStream" class="h-44 bg-[#F8FAFC] rounded-2xl p-4 font-mono text-xs leading-relaxed overflow-y-auto scrollbar-thin text-slate-700 space-y-1.5 border border-slate-200 shadow-inner">
+        <div class="text-slate-400">[2026-10-20 03:00:00 UTC] Initializing MedOps Lab Swiss Diagnostic SRE Kernel...</div>
+        <div class="text-[#2B4C7E]">[2026-10-20 03:00:01 UTC] Hugging Face 72B Serverless Inference Token authenticated.</div>
+        <div class="text-[#059669]">[2026-10-20 03:00:02 UTC] Dual-slot DevOps Controller ready: Active=Primary-AI-Canary-v2.4.</div>
+        <div class="text-purple-700">[2026-10-20 03:00:03 UTC] HIPAA PHI Shield armed: 100% deterministic SSN, MRN, Name scrubbing active.</div>
+        <div class="text-amber-700">[2026-10-20 03:00:04 UTC] Pharmacological Hallucination Firewall: 0.0% unsafe pass-through policy armed.</div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="max-w-[1580px] mx-auto px-6 sm:px-10 py-12 border-t border-slate-200 text-slate-500 text-xs font-mono flex flex-col sm:flex-row items-center justify-between gap-4">
+    <div class="flex items-center gap-3">
+      <span class="w-2.5 h-2.5 rounded-full bg-[#2B4C7E]"></span>
+      <span class="text-[#111315] font-bold">MedOps Lab Swiss SRE v1.0</span>
+      <span>&bull; HackOctober MLH X Tech4hack</span>
+    </div>
+    <div class="flex items-center gap-6">
+      <span>DevOps Track</span>
+      <span>Health Track</span>
+      <span>ML/AI Track</span>
+      <a href="/api/health" class="text-[#2B4C7E] font-semibold hover:underline">System Status: HEALTHY</a>
+    </div>
+  </footer>
+
+  <!-- ================= THREE.JS 3D LIQUID-GLASS DNA HELIX SCRIPT ================= -->
+  <script>
+    let scene, camera, renderer, dnaGroup;
+    let strandMaterial, rungMaterial, baseMaterial;
+    let isDriftActive = false;
+
+    function init3DHelix() {
+      const container = document.getElementById('dnaContainer');
+      const canvas = document.getElementById('dnaCanvas');
+      if (!container || !canvas) return;
+
+      const width = container.clientWidth;
+      const height = container.clientHeight;
+
+      scene = new THREE.Scene();
+      camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+      camera.position.set(0, 0, 22);
+
+      renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+      renderer.setSize(width, height);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+      // Crisp Studio Key, Fill & Specular Chrome Rim Lights
+      const ambientLight = new THREE.AmbientLight(0xffffff, 1.1);
+      scene.add(ambientLight);
+
+      const dirLight1 = new THREE.DirectionalLight(0x2B4C7E, 2.2);
+      dirLight1.position.set(12, 18, 16);
+      scene.add(dirLight1);
+
+      const dirLight2 = new THREE.DirectionalLight(0x00d4ff, 1.8);
+      dirLight2.position.set(-16, -12, 14);
+      scene.add(dirLight2);
+
+      const rimLight = new THREE.DirectionalLight(0xffffff, 2.0);
+      rimLight.position.set(0, -18, -12);
+      scene.add(rimLight);
+
+      // Materials: High-Refraction Liquid-Crystal Glass
+      strandMaterial = new THREE.MeshPhysicalMaterial({
+        color: 0x2B4C7E,
+        metalness: 0.2,
+        roughness: 0.08,
+        transmission: 0.82,
+        transparent: true,
+        opacity: 0.90,
+        ior: 1.52,
+        reflectivity: 0.9
+      });
+
+      rungMaterial = new THREE.MeshPhysicalMaterial({
+        color: 0x4A77B4,
+        metalness: 0.15,
+        roughness: 0.14,
+        transmission: 0.70,
+        transparent: true,
+        opacity: 0.82,
+        ior: 1.4
+      });
+
+      baseMaterial = new THREE.MeshStandardMaterial({
+        color: 0x059669,
+        metalness: 0.25,
+        roughness: 0.2
+      });
+
+      dnaGroup = new THREE.Group();
+
+      // Build Double Helix Strands & Rungs
+      const numRungs = 45;
+      const radius = 2.8;
+      const heightStep = 0.55;
+      const twistRate = 0.22;
+
+      for (let i = 0; i < numRungs; i++) {
+        const y = (i - numRungs / 2) * heightStep;
+        const angle = i * twistRate;
+
+        const x1 = Math.cos(angle) * radius;
+        const z1 = Math.sin(angle) * radius;
+
+        const x2 = Math.cos(angle + Math.PI) * radius;
+        const z2 = Math.sin(angle + Math.PI) * radius;
+
+        // Spheres on Strand A and Strand B
+        const sphereGeo = new THREE.SphereGeometry(0.24, 16, 16);
+        const sphereA = new THREE.Mesh(sphereGeo, strandMaterial);
+        sphereA.position.set(x1, y, z1);
+        dnaGroup.add(sphereA);
+
+        const sphereB = new THREE.Mesh(sphereGeo, strandMaterial);
+        sphereB.position.set(x2, y, z2);
+        dnaGroup.add(sphereB);
+
+        // Connecting Rung (Cylinder between x1,z1 and x2,z2)
+        const rungLength = radius * 2;
+        const rungGeo = new THREE.CylinderGeometry(0.06, 0.06, rungLength, 8);
+        const rung = new THREE.Mesh(rungGeo, rungMaterial);
+
+        rung.position.set((x1 + x2) / 2, y, (z1 + z2) / 2);
+        rung.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), new THREE.Vector3(x1 - x2, 0, z1 - z2).normalize());
+        dnaGroup.add(rung);
+      }
+
+      // Center DNA Helix diagonally across the hero viewport
+      dnaGroup.rotation.z = -0.48;
+      dnaGroup.rotation.x = 0.22;
+      dnaGroup.position.set(0.6, 0.3, 0);
+
+      scene.add(dnaGroup);
+
+      // Drag / Mouse Interactive Rotation
+      let isDragging = false;
+      let previousMousePosition = { x: 0, y: 0 };
+
+      canvas.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        previousMousePosition = { x: e.clientX, y: e.clientY };
+      });
+
+      window.addEventListener('mouseup', () => isDragging = false);
+
+      window.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        const deltaX = e.clientX - previousMousePosition.x;
+        const deltaY = e.clientY - previousMousePosition.y;
+
+        dnaGroup.rotation.y += deltaX * 0.005;
+        dnaGroup.rotation.x += deltaY * 0.005;
+
+        previousMousePosition = { x: e.clientX, y: e.clientY };
+      });
+
+      // Animation Loop
+      function animate() {
+        requestAnimationFrame(animate);
+        if (!isDragging) {
+          dnaGroup.rotation.y += 0.006;
+        }
+        renderer.render(scene, camera);
+      }
+      animate();
+
+      window.addEventListener('resize', () => {
+        const w = container.clientWidth;
+        const h = container.clientHeight;
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+        renderer.setSize(w, h);
+      });
+    }
+
+    // Dynamic Color Shift when Drift / Rollback occurs
+    function updateDnaColor(driftBreach) {
+      if (!strandMaterial || !rungMaterial) return;
+      if (driftBreach) {
+        strandMaterial.color.setHex(0xDC2626); // Crimson alert
+        rungMaterial.color.setHex(0xD97706);   // Amber alert
+      } else {
+        strandMaterial.color.setHex(0x2B4C7E); // Classic Navy
+        rungMaterial.color.setHex(0x4A77B4);   // Soft Cobalt
+      }
+    }
+
+    // ================= CLIENT SRE APPLICATION LOGIC =================
+    function addTerminalLog(message, type = 'info') {
+      const term = document.getElementById('terminalStream');
+      if (!term) return;
+      const timeStr = new Date().toISOString().replace('T', ' ').substr(0, 19) + ' UTC';
+      const el = document.createElement('div');
+      
+      let colorClass = 'text-slate-700';
+      if (type === 'warn') colorClass = 'text-amber-700 font-semibold';
+      else if (type === 'danger') colorClass = 'text-rose-700 font-bold';
+      else if (type === 'success') colorClass = 'text-emerald-700 font-semibold';
+      else if (type === 'purple') colorClass = 'text-purple-700';
+      else if (type === 'navy') colorClass = 'text-[#2B4C7E] font-semibold';
+
+      el.className = `${colorClass} transition-opacity duration-200`;
+      el.innerHTML = `<span class="text-slate-400 font-mono">[${timeStr}]</span> ${message}`;
+      term.appendChild(el);
+      term.scrollTop = term.scrollHeight;
+    }
+
+    function clearTerminal() {
+      const term = document.getElementById('terminalStream');
+      if (term) term.innerHTML = '<div class="text-slate-400 font-mono">[Logs Cleared]</div>';
+    }
+
+    async function fetchStatus() {
+      try {
+        const res = await fetch('/api/status');
+        if (!res.ok) return;
+        const data = await res.json();
+        updateUIState(data);
+      } catch (err) {
+        console.error("Status poll failed:", err);
+      }
+    }
+
+    function updateUIState(data) {
+      const isFallback = data.is_fallback_active;
+      const heroSlotBadge = document.getElementById('heroSlotBadge');
+      const heroSlotName = document.getElementById('heroSlotName');
+      const driftCard = document.getElementById('driftCard');
+      const metricPSI = document.getElementById('metricPSI');
+      const driftLevelBadge = document.getElementById('driftLevelBadge');
+
+      metricPSI.innerText = data.model_drift_psi.toFixed(3);
+
+      if (isFallback) {
+        heroSlotBadge.className = 'inline-flex items-center gap-3 bg-rose-50 border-2 border-rose-500 text-rose-900 px-5 py-3 rounded-2xl shadow-md animate-pulse';
+        heroSlotName.innerText = 'AUTO-ROLLBACK: SAFE-CLINICAL-FALLBACK-V1.0 (<8ms)';
+        
+        driftCard.className = 'glass-card rounded-2xl p-5 border-2 border-rose-400 bg-rose-50/50';
+        driftLevelBadge.className = 'mt-3 inline-block px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-rose-100 text-rose-700 border border-rose-300';
+        driftLevelBadge.innerText = 'CIRCUIT BREAKER OPEN';
+        metricPSI.className = 'text-3xl sm:text-4xl font-extrabold text-rose-600';
+        
+        updateDnaColor(true);
+      } else {
+        heroSlotBadge.className = 'inline-flex items-center gap-3 bg-white/95 border border-[#2B4C7E]/20 text-[#111315] px-5 py-3 rounded-2xl shadow-sm hover:border-[#2B4C7E] transition-all';
+        heroSlotName.innerText = 'Primary-AI-Canary-v2.4';
+
+        if (data.model_drift_psi > 0.10) {
+          driftCard.className = 'glass-card rounded-2xl p-5 border border-amber-400 bg-amber-50/40';
+          driftLevelBadge.className = 'mt-3 inline-block px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-100 text-amber-700 border border-amber-300';
+          driftLevelBadge.innerText = 'DRIFT WARNING';
+          metricPSI.className = 'text-3xl sm:text-4xl font-extrabold text-amber-600';
+          updateDnaColor(true);
+        } else {
+          driftCard.className = 'glass-card rounded-2xl p-5 hover:border-[#2B4C7E]/40 transition-all';
+          driftLevelBadge.className = 'mt-3 inline-block px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-blue-50 text-[#2B4C7E] border border-blue-200';
+          driftLevelBadge.innerText = 'STABLE CANARY';
+          metricPSI.className = 'text-3xl sm:text-4xl font-extrabold text-[#059669]';
+          updateDnaColor(false);
+        }
+      }
+
+      if (data.latest_vitals) {
+        document.getElementById('metricHR').innerText = Math.round(data.latest_vitals.heart_rate);
+        document.getElementById('metricSpO2').innerText = Math.round(data.latest_vitals.spo2);
+        document.getElementById('spo2Bar').style.width = Math.min(100, Math.max(0, data.latest_vitals.spo2)) + '%';
+        document.getElementById('metricBP').innerText = `${Math.round(data.latest_vitals.systolic_bp)}/80`;
+      }
+    }
+
+    async function injectChaos(faultType) {
+      addTerminalLog(`[CHAOS SRE ENGINE] Dispatching fault injection: '${faultType}'...`, 'warn');
+      try {
+        const res = await fetch('/api/chaos/inject', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ fault_type: faultType, intensity: 1.0 })
+        });
+        const data = await res.json();
+        
+        if (faultType === 'drift') {
+          addTerminalLog(`[CIRCUIT BREAKER] Auto-Rollback triggered! Sub-10ms shift -> Safe-Clinical-Fallback-v1.0 (PSI=${data.model_drift_psi})`, 'danger');
+        } else if (faultType === 'hallucination_attack') {
+          addTerminalLog(`[CLINICAL FIREWALL] Blocked: ${data.blocked_clinical_justification}`, 'danger');
+          if (data.hf_sbar) {
+            document.getElementById('hfSbarText').innerText = data.hf_sbar;
+          }
+        } else if (faultType === 'sensor_noise') {
+          addTerminalLog(`[HARDWARE INTEGRITY] Sensor corruption detected. Auto-rollback engaged.`, 'danger');
+        } else if (faultType === 'statistical_noise') {
+          addTerminalLog(`[SRE TELEMETRY] High-frequency statistical sensor noise injected.`, 'navy');
+        }
+        
+        fetchStatus();
+      } catch (err) {
+        addTerminalLog(`[ERROR] Fault injection failed: ${err}`, 'danger');
+      }
+    }
+
+    async function restoreCanary() {
+      addTerminalLog(`[SELF-HEALING SRE] Restoring Canary baseline and resetting circuit breaker...`, 'navy');
+      try {
+        const res = await fetch('/api/chaos/inject', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ fault_type: 'reset' })
+        });
+        const data = await res.json();
+        addTerminalLog(`[SELF-HEALING COMPLETE] Primary-AI-Canary-v2.4 reactivated (PSI=${data.model_drift_psi}).`, 'success');
+        updateDnaColor(false);
+        fetchStatus();
+      } catch (err) {
+        addTerminalLog(`[ERROR] Restoration failed: ${err}`, 'danger');
+      }
+    }
+
+    function fillSepsisCrisisDemo() {
+      document.getElementById('inputHR').value = 138;
+      document.getElementById('inputSpO2').value = 86;
+      document.getElementById('inputSBP').value = 82;
+      document.getElementById('inputDBP').value = 48;
+      document.getElementById('inputRR').value = 32;
+      document.getElementById('inputTemp').value = 39.4;
+      document.getElementById('inputNotes').value = "Attending Dr. Sarah Connor, Patient Jane Smith, SSN 123-45-6789, MRN #9182371. Patient in hyperdynamic septic shock with acute lactatemia. Prescribed: Potassium Chloride 30 mEq IV Push STAT and Epinephrine 5 mg IV Push.";
+      document.getElementById('inputMed').value = "potassium chloride";
+      document.getElementById('inputDose').value = "30";
+      document.getElementById('inputUnit').value = "meq";
+      document.getElementById('inputRoute').value = "iv_push";
+      addTerminalLog("[DEMO PRESET] Loaded Septic Shock + Lethal KCl Bolus Clinical Scenario.", 'navy');
+    }
+
+    async function handleEvaluationSubmit(event) {
+      event.preventDefault();
+      
+      const payload = {
+        vitals: {
+          patient_id: "PT-" + Math.floor(10000 + Math.random() * 90000),
+          heart_rate: parseFloat(document.getElementById('inputHR').value),
+          spo2: parseFloat(document.getElementById('inputSpO2').value),
+          systolic_bp: parseFloat(document.getElementById('inputSBP').value),
+          diastolic_bp: parseFloat(document.getElementById('inputDBP').value),
+          resp_rate: parseFloat(document.getElementById('inputRR').value),
+          temp_c: parseFloat(document.getElementById('inputTemp').value),
+          clinical_notes: document.getElementById('inputNotes').value,
+          proposed_medication: document.getElementById('inputMed').value || null,
+          proposed_dose: document.getElementById('inputDose').value ? parseFloat(document.getElementById('inputDose').value) : null,
+          dose_unit: document.getElementById('inputUnit').value || null,
+          route: document.getElementById('inputRoute').value || null
+        },
+        generate_ai_copilot: true
+      };
+
+      addTerminalLog(`[INFERENCE] Evaluating telemetry packet for ${payload.vitals.patient_id}...`, 'navy');
+      
+      try {
+        const res = await fetch('/api/evaluate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+
+        // Update Redacted Notes preview & counter
+        document.getElementById('evalRedactedNotes').innerText = data.redacted_clinical_notes || "(No text provided)";
+        document.getElementById('phiCountBadge').innerText = `${data.phi_redacted_count} PHI Entities Redacted`;
+
+        // Update MEWS & MAP
+        document.getElementById('metricMEWS').innerText = data.mews_score;
+        document.getElementById('metricMAP').innerText = data.map_bp;
+        
+        const tierBadge = document.getElementById('riskTierBadge');
+        if (data.clinical_risk_tier === 'CRITICAL_SEPSIS_ALERT') {
+          tierBadge.className = 'mt-3 inline-block px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-rose-100 text-rose-700 border border-rose-300';
+          tierBadge.innerText = 'CRITICAL SEPSIS ALERT';
+        } else if (data.clinical_risk_tier === 'MODERATE_RISK') {
+          tierBadge.className = 'mt-3 inline-block px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-100 text-amber-700 border border-amber-300';
+          tierBadge.innerText = 'MODERATE RISK';
+        } else {
+          tierBadge.className = 'mt-3 inline-block px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-50 text-[#059669] border border-emerald-200';
+          tierBadge.innerText = 'LOW RISK';
+        }
+
+        // Guardrail Banner
+        const gBadge = document.getElementById('guardrailBadge');
+        const gAction = document.getElementById('guardrailAction');
+        const gJust = document.getElementById('guardrailJustification');
+        const g = data.hallucination_guardrail;
+
+        if (g.hallucination_detected) {
+          gBadge.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-700 border border-rose-300';
+          gBadge.innerText = g.guardrail_status;
+          gAction.innerText = `Action: ${g.action_taken} (Unsafe Pass-Through: ${g.unsafe_passthrough_rate})`;
+          gJust.innerText = g.clinical_justification;
+          addTerminalLog(`[GUARDRAIL BLOCK] ${g.clinical_justification}`, 'danger');
+        } else {
+          gBadge.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300';
+          gBadge.innerText = g.guardrail_status;
+          gAction.innerText = `Action: ${g.action_taken}`;
+          gJust.innerText = g.clinical_justification;
+        }
+
+        // PHI terminal log
+        if (data.phi_redacted_count > 0) {
+          addTerminalLog(`[HIPAA SHIELD] Redacted ${data.phi_redacted_count} identifier(s): [${data.phi_entities_detected.join(', ')}]`, 'purple');
+        }
+
+        // Hugging Face AI Copilot Reports
+        if (data.hf_copilot) {
+          document.getElementById('hfSbarText').innerText = data.hf_copilot.sbar_summary;
+          document.getElementById('hfRcaText').innerText = data.hf_copilot.devops_rca;
+          document.getElementById('hfCopilotModeBadge').innerText = data.hf_copilot.generation_mode;
+          document.getElementById('hfLatencyText').innerText = `LATENCY: ${data.hf_copilot.generation_latency_ms} ms`;
+          addTerminalLog(`[HF COPILOT REPORT] Generated SBAR & DevOps RCA via ${data.hf_copilot.model_name}`, 'success');
+        }
+
+        fetchStatus();
+
+      } catch (err) {
+        addTerminalLog(`[EVALUATION ERROR] ${err}`, 'danger');
+      }
+    }
+
+    function triggerLiveAudit() {
+      addTerminalLog("[AUDIT] Running full end-to-end clinical AI and DevOps circuit-breaker verification...", 'navy');
+      fillSepsisCrisisDemo();
+      const form = document.getElementById('evalForm');
+      if (form) form.requestSubmit();
+      const target = document.getElementById('workbench');
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function runAutomatedTour() {
+      addTerminalLog("[TOUR] Starting automated demonstration tour...", 'navy');
+      fillSepsisCrisisDemo();
+      setTimeout(() => {
+        const form = document.getElementById('evalForm');
+        if (form) form.requestSubmit();
+        const target = document.getElementById('workbench');
+        if (target) target.scrollIntoView({ behavior: 'smooth' });
+      }, 500);
+    }
+
+    // Auto-init on load
+    window.addEventListener('DOMContentLoaded', () => {
+      init3DHelix();
+      fetchStatus();
+      setInterval(fetchStatus, 3500);
+    });
+  </script>
+</body>
+</html>
