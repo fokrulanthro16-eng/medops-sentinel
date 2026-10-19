@@ -8,6 +8,26 @@
 [![Latency SLA](https://img.shields.io/badge/Mean%20Latency-0.105ms%20(SLA%20%3C10ms)-blue?style=for-the-badge)](#empirical-performance-benchmarks)
 [![Zero Hallucination Pass-Through](https://img.shields.io/badge/Unsafe%20Pass--Through-0.0%25-rose?style=for-the-badge)](#clinical-hallucination-guardrail)
 [![Hugging Face Copilot](https://img.shields.io/badge/HF%20Model-Qwen2.5--72B--Instruct-yellow?style=for-the-badge&logo=huggingface)](https://huggingface.co)
+[![Demo Video](https://img.shields.io/badge/Demo%20Video-1080p%20Walkthrough-red?style=for-the-badge&logo=youtube)](./medops_sentinel_demo_1080p.mp4)
+
+---
+
+## 🎥 1080p Full HD Video Demonstration
+
+A complete 104-second, 1080p 30fps Full HD walkthrough with professional English narration (`en-US-ChristopherNeural`) is included directly in this repository:
+
+▶️ **Watch Video:** [`medops_sentinel_demo_1080p.mp4`](./medops_sentinel_demo_1080p.mp4)
+
+| Timestamp | Scene | Key Feature Demonstrated |
+| :--- | :--- | :--- |
+| **0:00 - 0:30** | **Scene 1: Aelion Lab 3D DNA Helix & ICU Telemetry** | Swiss biotech diagnostic cockpit, Three.js WebGL rotating liquid-crystal DNA double helix, real-time vitals streams (HR, SpO2, BP, RR), MEWS sepsis gauge. |
+| **0:30 - 1:09** | **Scene 2: Chaos Engineering & Sub-10ms Auto-Rollback** | Injection of statistical Model Drift ($\text{PSI} > 0.25$), instant sub-10ms circuit-breaker rollback to `Safe-Clinical-Fallback-v1.0`, dynamic crimson helix alert, lethal dosage firewall intercepting toxic KCl IV push (0.0% pass-through), self-healing recovery. |
+| **1:09 - 1:44** | **Scene 3: HIPAA PHI Shield & Hugging Face Qwen-72B Dual Copilot** | Sepsis crisis demo load, deterministic HIPAA regex redaction stripping patient names, SSNs, and MRNs, and Hugging Face Qwen-72B dual generation: Clinical SBAR Handoff Summary + DevOps Drift Root-Cause Analysis (RCA). |
+
+To reproduce the automated video recording at any time:
+```bash
+python generate_demo_video.py
+```
 
 ---
 

@@ -67,3 +67,9 @@ venv.bak/
 # OS files
 .DS_Store
 Thumbs.db
+
+# Video Recording Temporaries
+temp_recording/
+*.mp3
+*.webm
+
