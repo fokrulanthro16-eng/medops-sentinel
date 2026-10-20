@@ -1182,3 +1182,9 @@ class MedOpsSentinel:
 
 # Global singleton instance for server and test usage
 sentinel_engine = MedOpsSentinel()
+
+def __getattr__(name: str):
+    if name == "app":
+        from server import app as fastapi_app
+        return fastapi_app
+    raise AttributeError(f"module '{__name__}' has no attribute '{name}'")
