@@ -41,6 +41,9 @@ app = FastAPI(
     version="1.0.0"
 )
 
+# Vercel Serverless ASGI entrypoint alias
+handler = app
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
