@@ -2,13 +2,23 @@
 ### Autonomous Clinical AI Drift Firewall, Vitals Telemetry & Self-Healing Healthcare DevOps Engine
 #### With Integrated Hugging Face 72B Clinical SBAR & SRE Copilot
 
-[![CI DevOps Verification](https://img.shields.io/badge/CI%2FCD-Passing%20(16%2F16)-emerald?style=for-the-badge&logo=githubactions)](https://github.com)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel%20Production-000000?style=for-the-badge&logo=vercel)](https://medops-sentinel-live-os34.vercel.app)
+[![Live Repository](https://img.shields.io/badge/Repository-medops--sentinel--live-181717?style=for-the-badge&logo=github)](https://github.com/fokrulanthro16-eng/medops-sentinel-live)
+[![CI DevOps Verification](https://img.shields.io/badge/CI%2FCD-Passing%20(16%2F16)-emerald?style=for-the-badge&logo=githubactions)](https://github.com/fokrulanthro16-eng/medops-sentinel-live/actions)
 [![HackOctober MLH X Tech4hack](https://img.shields.io/badge/Hackathon-HackOctober%20MLH%20X%20Tech4hack-cyan?style=for-the-badge)](https://mlh.io)
 [![Track Alignment](https://img.shields.io/badge/Tracks-DevOps%20%7C%20Health%20%7C%20ML%2FAI-purple?style=for-the-badge)](#hackathon-track-alignment)
 [![Latency SLA](https://img.shields.io/badge/Mean%20Latency-0.105ms%20(SLA%20%3C10ms)-blue?style=for-the-badge)](#empirical-performance-benchmarks)
 [![Zero Hallucination Pass-Through](https://img.shields.io/badge/Unsafe%20Pass--Through-0.0%25-rose?style=for-the-badge)](#clinical-hallucination-guardrail)
 [![Hugging Face Copilot](https://img.shields.io/badge/HF%20Model-Qwen2.5--72B--Instruct-yellow?style=for-the-badge&logo=huggingface)](https://huggingface.co)
 [![Demo Video](https://img.shields.io/badge/Demo%20Video-1080p%20Walkthrough-red?style=for-the-badge&logo=youtube)](./medops_sentinel_demo_1080p.mp4)
+
+---
+
+## 🚀 Live Production Deployment
+- **Live Demo:** [https://medops-sentinel-live-os34.vercel.app](https://medops-sentinel-live-os34.vercel.app)
+- **Repository:** [https://github.com/fokrulanthro16-eng/medops-sentinel-live](https://github.com/fokrulanthro16-eng/medops-sentinel-live)
+- **Status:** Verified Active (FastAPI + Tailwind / Clinical SRE Firewall)
+- **CI/CD:** 16/16 Tests Passing
 
 ---
 
@@ -128,13 +138,27 @@ flowchart TD
 
 ## 🎛️ Interactive Aelion Lab Swiss Diagnostic Cockpit
 
-Access the cockpit by navigating to **`http://localhost:8000/`**:
+Access the live cockpit directly at **[https://medops-sentinel-live-os34.vercel.app](https://medops-sentinel-live-os34.vercel.app)** (or locally at **`http://localhost:8000/`**):
 
 - **Real-Time 3D Liquid-Glass DNA Helix:** Interactive Three.js double helix rotating diagonally across the hero canvas with high-refraction glass specular highlights and dynamic alert color shifts.
 - **Monumental Architectural Typography:** Luxury Swiss diagnostic editorial layout featuring *"Precise Lab Telemetry for"* and *"Health Answers"*.
 - **Live ICU Physiological Signal Cards:** Heart Rate (74 BPM), SpO2 (98%), Hemodynamics (118/78 mmHg, MAP 91.3), MEWS Sepsis Score (0 pts), and Model Drift (0.000 PSI).
 - **Chaos SRE Controller:** Four tactile pill actions to deploy model drift, trigger lethal dosage attacks, corrupt sensor payloads, and restore the canary slot with sub-10ms auto-rollback.
 - **Hugging Face AI Dual Intelligence Console:** Real-time generation of **"1. CLINICAL SBAR HANDOFF SUMMARY"** and **"2. DEVOPS DRIFT ROOT-CAUSE ANALYSIS (RCA)"**.
+
+### 📸 High-Resolution Visual Gallery
+
+| 01. Hero & 3D DNA Double Helix Cockpit | 02. ICU Physiological Signals & Sepsis Radar |
+| :---: | :---: |
+| ![Hero & DNA Helix](./screenshots/01_hero_dna_telemetry.png) | ![ICU Telemetry Radar](./screenshots/02_icu_vitals_radar.png) |
+
+| 03. Chaos Engine Auto-Rollback Alert | 04. Hugging Face Qwen-72B Dual Copilot |
+| :---: | :---: |
+| ![Chaos Auto-Rollback Alert](./screenshots/03_chaos_auto_rollback.png) | ![Hugging Face Qwen-72B Copilot](./screenshots/04_hf_qwen_copilot.png) |
+
+| 05. HIPAA FHIR Deterministic PHI Shield |
+| :---: |
+| ![HIPAA PHI Redaction Shield](./screenshots/05_phi_redaction_shield.png) |
 
 ---
 
