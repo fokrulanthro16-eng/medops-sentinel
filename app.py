@@ -69,7 +69,7 @@ class EvaluationRequest(BaseModel):
     """Clinical AI Telemetry Evaluation Request."""
     vitals: PatientVitals
     simulate_delay_ms: Optional[float] = 0.0
-    generate_ai_copilot: Optional[bool] = True
+    generate_ai_copilot: Optional[bool] = False
 
 
 class GuardrailResult(BaseModel):
